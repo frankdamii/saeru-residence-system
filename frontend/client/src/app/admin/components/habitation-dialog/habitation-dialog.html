@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Añadir Nueva Habitación</h1>
+<div mat-dialog-content [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <mat-label>Código de Habitación</mat-label>
+    <input matInput formControlName="habitation_code" placeholder="Ej: R01-305">
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Piso</mat-label>
+    <input matInput formControlName="floor" type="number">
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Capacidad (1-4)</mat-label>
+    <input matInput formControlName="capacity" type="number">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="form.invalid">Guardar</button>
+</div>

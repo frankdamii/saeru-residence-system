@@ -1,0 +1,77 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 260px;
+  background-color: #fff;
+  box-shadow: 3px 0 6px rgba(0,0,0,0.1);
+}
+
+.brand-header {
+  padding: 20px;
+  text-align: center;
+  background-color: #fafafa;
+}
+
+.brand-logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+.brand-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.brand-subtitle {
+  margin: 5px 0 0 0;
+  font-size: 0.8rem;
+  color: #777;
+  line-height: 1.2;
+}
+
+.mat-nav-list a {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    height: 48px;
+    color: #444;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.mat-nav-list a:hover {
+    background-color: rgba(0,0,0,0.04);
+}
+
+.mat-nav-list a mat-icon {
+    margin-right: 20px;
+    color: #666;
+}
+
+.active-link {
+    background-color: #FFF8E1; /* Un amarillo muy claro para el fondo */
+    color: #FFAB00; /* Amarillo/dorado para el texto */
+    font-weight: 500;
+}
+
+.active-link mat-icon {
+    color: #FFAB00; /* Amarillo/dorado para el icono */
+}
+
+.main-toolbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.main-content {
+  padding: 24px;
+  background-color: #f4f7f6;
+  min-height: calc(100vh - 64px);
+}

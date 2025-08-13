@@ -1,0 +1,45 @@
+<div class="hero-section">
+  <div class="background-carousel">
+    <div *ngFor="let imageUrl of backgroundImages; let i = index"
+         class="background-image"
+         [style.background-image]="'url(' + imageUrl + ')'"
+         [class.active]="i === currentImageIndex">
+    </div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <img src="assets/images/AAUCA_LOGO-TR@2x_EP.png" alt="AAUCA Logo" class="hero-logo">
+    <h1>Bienvenido a SAERU</h1>
+    <br>
+    <h2>Sistema de Admisión de Estudiantes en la Residencia Universitaria</h2>
+    <p>Tu portal único para solicitar y gestionar tu estancia en las residencias de la AAUCA. Un proceso sencillo, digital y centralizado.</p>
+    <div class="hero-actions">
+      <a mat-flat-button color="accent" class="cta-button" routerLink="/apply">¡Inscríbete Aquí Ahora!</a>
+      <a mat-button routerLink="/auth">Ya tengo una cuenta</a>
+    </div>
+  </div>
+</div>
+
+<div class="info-section">
+  <mat-card class="info-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>school</mat-icon>
+      <mat-card-title>Nuestra Universidad</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>La Universidad Afro-Americana de África Central (AAUCA) es un centro de excelencia académica, comprometido con la formación de líderes para el futuro del continente.</p>
+      <a mat-stroked-button color="primary" routerLink="/about">Conoce nuestra historia</a>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="info-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>night_shelter</mat-icon>
+      <mat-card-title>Nuestras Residencias</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Ofrecemos un entorno de vida seguro, moderno y propicio para el estudio. Conoce las instalaciones, servicios y la comunidad que te espera.</p>
+      <a mat-stroked-button color="primary" routerLink="/about">Descubre la vida en la residencia</a>
+    </mat-card-content>
+  </mat-card>
+</div>

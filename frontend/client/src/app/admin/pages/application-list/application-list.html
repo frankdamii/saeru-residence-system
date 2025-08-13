@@ -1,0 +1,53 @@
+<div class="container">
+  <h1>Lista de Solicitudes de Admisión</h1>
+
+  <ng-container *ngIf="(applications$ | async) as applications; else loading">
+    <div class="table-container mat-elevation-z8">
+      <table mat-table [dataSource]="applications">
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Nombre del Solicitante </th>
+          <td mat-cell *matCellDef="let element"> {{element.StudentProfile?.first_name}} {{element.StudentProfile?.last_name}} </td>
+        </ng-container>
+
+        <!-- Submission Date Column -->
+        <ng-container matColumnDef="submission_date">
+          <th mat-header-cell *matHeaderCellDef> Fecha de Envío </th>
+          <td mat-cell *matCellDef="let element"> {{element.submission_date | date:'dd/MM/yyyy HH:mm'}} </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Estado </th>
+          <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="primary" (click)="viewDetails(element.id)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
+</div>

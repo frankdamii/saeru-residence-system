@@ -1,0 +1,53 @@
+<mat-toolbar color="primary" class="navbar">
+  <div class="navbar-brand">
+    <img src="assets/images/AAUCA_LOGO-TR@2x_EP.png" alt="AAUCA Logo" class="logo">
+    <span>SAERU</span>
+  </div>
+
+  <!-- Menú para pantallas grandes -->
+  <div class="navbar-links desktop-menu">
+    <a mat-button routerLink="/home" routerLinkActive="active-link">Inicio</a>
+    <a mat-button routerLink="/about" routerLinkActive="active-link">Sobre Nosotros</a>
+    <a mat-stroked-button routerLink="/apply">Inscríbete</a>
+    <a mat-button routerLink="/auth">Ya tengo cuenta</a>
+  </div>
+
+  <!-- Menú de hamburguesa para móviles -->
+  <div class="mobile-menu">
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <a mat-menu-item routerLink="/home">Inicio</a>
+      <a mat-menu-item routerLink="/about">Sobre Nosotros</a>
+      <a mat-menu-item routerLink="/apply">Inscríbete</a>
+      <a mat-menu-item routerLink="/auth">Ya tengo cuenta</a>
+    </mat-menu>
+  </div>
+</mat-toolbar>
+
+<main class="content">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h4>SAERU</h4>
+      <p>Sistema de Admisión de Estudiantes en la Residencia Universitaria</p>
+      <p>&copy; 2025 Universidad Afro-Americana de África Central (AAUCA)</p>
+    </div>
+    <div class="footer-section">
+      <h4>Contacto</h4>
+      <p><mat-icon>location_on</mat-icon> Ciudad de La Paz, Djiblohó</p>
+      <p><mat-icon>phone</mat-icon> (+240) 123 456 789</p>
+      <p><mat-icon>email</mat-icon> info@aauca.com</p>
+    </div>
+    <div class="footer-section">
+      <h4>Enlaces</h4>
+      <a href="#">Política de Privacidad</a>
+      <a href="#">Términos de Uso</a>
+    </div>
+  </div>
+</footer>
+

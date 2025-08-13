@@ -1,0 +1,63 @@
+<mat-sidenav-container class="sidenav-container">
+  <!-- Barra Lateral -->
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    
+    <div class="brand-header">
+      <img src="assets/images/AAUCA_LOGO-TR@2x_EP.png" alt="AAUCA Logo" class="brand-logo">
+      <h3 class="brand-title">SAERU</h3>
+      <p class="brand-subtitle">Sistema de Admisión de Estudiantes en la Residencia Universitaria</p>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-nav-list>
+      <a mat-list-item routerLink="/admin/dashboard" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+      <a mat-list-item routerLink="/admin/announcements" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>campaign</mat-icon>
+        <span>Anuncios</span>
+      </a>
+      <a mat-list-item routerLink="/admin/applications" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>assignment</mat-icon>
+        <span>Solicitudes</span>
+      </a>
+      <a mat-list-item routerLink="/admin/students" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>people</mat-icon>
+        <span>Residentes</span>
+      </a>
+      <a mat-list-item routerLink="/admin/habitations" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>bed</mat-icon>
+        <span>Habitaciones</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Contenido Principal -->
+  <mat-sidenav-content>
+    <!-- Cabecera -->
+    <mat-toolbar color="primary" class="main-toolbar">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+     <b><span>Panel de Administración</span></b>
+      <span class="spacer"></span>
+      <button mat-icon-button (click)="logout()" matTooltip="Cerrar Sesión">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </mat-toolbar>
+    
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+    
+  </mat-sidenav-content>
+</mat-sidenav-container>

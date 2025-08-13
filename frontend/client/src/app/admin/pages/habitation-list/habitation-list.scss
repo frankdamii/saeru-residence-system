@@ -1,0 +1,27 @@
+.container {
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+.mat-expansion-panel-header {
+  font-size: 16px;
+}
+
+.occupant-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 16px;
+    font-style: italic;
+    color: #666;
+}

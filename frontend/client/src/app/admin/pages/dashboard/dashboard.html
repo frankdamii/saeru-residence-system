@@ -1,0 +1,80 @@
+<div class="dashboard-container">
+  <ng-container *ngIf="(stats$ | async) as stats; else loading">
+    <!-- Fila de Tarjetas de Estadísticas -->
+    <div class="stats-cards">
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>pending_actions</mat-icon>
+          <mat-card-title>{{ stats.pendingApplications }}</mat-card-title>
+          <mat-card-subtitle>Solicitudes Pendientes</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>people</mat-icon>
+          <mat-card-title>{{ stats.totalResidents }}</mat-card-title>
+          <mat-card-subtitle>Residentes Actuales</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>meeting_room</mat-icon>
+          <mat-card-title>{{ stats.availableHabitations }}</mat-card-title>
+          <mat-card-subtitle>Habitaciones Disponibles</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
+
+    <!-- Tabla de Actividad Reciente -->
+    <div class="recent-activity">
+      <h2>Solicitudes Recientes</h2>
+      <div class="table-container mat-elevation-z8">
+        <table mat-table [dataSource]="stats.recentApplications">
+
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+            <td mat-cell *matCellDef="let element"> {{element.StudentProfile?.first_name}} {{element.StudentProfile?.last_name}} </td>
+          </ng-container>
+
+          <!-- Submission Date Column -->
+          <ng-container matColumnDef="submission_date">
+            <th mat-header-cell *matHeaderCellDef> Fecha de Envío </th>
+            <td mat-cell *matCellDef="let element"> {{element.submission_date | date:'dd/MM/yyyy'}} </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Estado </th>
+            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button color="primary" (click)="viewApplication(element.id)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
+</div>

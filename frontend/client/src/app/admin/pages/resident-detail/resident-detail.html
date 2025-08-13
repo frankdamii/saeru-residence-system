@@ -1,0 +1,98 @@
+<div class="container">
+  <ng-container *ngIf="(resident$ | async) as resident; else loading">
+    <a mat-stroked-button routerLink="/admin/students" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+      Volver a la lista de residentes
+    </a>
+      <button mat-flat-button color="primary" (click)="downloadPdf()">
+        <mat-icon>download</mat-icon>
+        Descargar Ficha (PDF)
+      </button>
+    <h1>Perfil del Residente</h1>
+
+    <div class="details-grid">
+      <mat-card class="info-card">
+        <mat-card-header>
+          <img mat-card-avatar [src]="getFileUrl(resident?.profile_image_url)" alt="Foto de perfil">
+          <mat-card-title>{{ resident?.first_name }} {{ resident?.last_name }}</mat-card-title>
+          <mat-card-subtitle>ID Perfil: {{ resident?.id }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list role="list">
+            <mat-list-item role="listitem"><mat-icon matListItemIcon>cake</mat-icon> {{ resident?.date_of_birth | date:'dd/MM/yyyy' }}</mat-list-item>
+            <mat-list-item role="listitem"><mat-icon matListItemIcon>badge</mat-icon> {{ resident?.identity_document_type }} {{ resident?.identity_document_number }}</mat-list-item>
+            <mat-list-item role="listitem"><mat-icon matListItemIcon>phone</mat-icon> {{ resident?.phone_number }}</mat-list-item>
+            <mat-list-item role="listitem"><mat-icon matListItemIcon>home</mat-icon> {{ resident?.home_residence }}</mat-list-item>
+            <mat-list-item *ngIf="resident?.instagram_handle"><mat-icon matListItemIcon>camera_alt</mat-icon> {{ resident?.instagram_handle }}</mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Información Académica y de Residencia</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item><mat-icon matListItemIcon>school</mat-icon> {{ resident?.Faculty?.name || 'No especificada' }}</mat-list-item>
+            <mat-list-item><mat-icon matListItemIcon>history_edu</mat-icon> {{ resident?.Major?.name || 'No especificada' }}</mat-list-item>
+            <mat-list-item><mat-icon matListItemIcon>class</mat-icon> {{ resident?.AcademicLevel?.level_name || 'No especificado' }}</mat-list-item>
+            <mat-divider></mat-divider>
+            <ng-container *ngIf="resident?.Application?.Habitation as habitation; else noRoom">
+              <mat-list-item><mat-icon matListItemIcon>location_city</mat-icon> {{ habitation?.Residence?.name }}</mat-list-item>
+              <mat-list-item><mat-icon matListItemIcon>bed</mat-icon> Habitación {{ habitation?.habitation_code }} <span *ngIf="habitation?.floor !== null">(Piso {{ habitation?.floor }})</span></mat-list-item>
+            </ng-container>
+            <ng-template #noRoom>
+              <mat-list-item><mat-icon matListItemIcon>bed</mat-icon> Habitación no asignada</mat-list-item>
+            </ng-template>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Cuenta y Tutores</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h3 class="sub-header">Cuenta de Usuario</h3>
+          <mat-list>
+            <mat-list-item><mat-icon matListItemIcon>email</mat-icon> {{ resident?.User?.email }}</mat-list-item>
+            <mat-list-item>
+              <mat-icon matListItemIcon>toggle_on</mat-icon>
+              <mat-chip-listbox>
+                <mat-chip [color]="resident?.User?.is_active ? 'primary' : 'warn'" selected>
+                  {{ resident?.User?.is_active ? 'Activa' : 'Inactiva' }}
+                </mat-chip>
+              </mat-chip-listbox>
+            </mat-list-item>
+          </mat-list>
+          <mat-divider></mat-divider>
+          <h3 class="sub-header">Tutores</h3>
+          <ng-container *ngIf="resident?.guardians?.length > 0; else noGuardians">
+            <div class="guardian-list">
+              <div *ngFor="let guardian of resident.guardians" class="guardian-item">
+                <mat-icon>supervisor_account</mat-icon>
+                <div class="guardian-details">
+                  <p class="guardian-name">{{ guardian?.full_name }} ({{ guardian?.guardian_type }})</p>
+                  <p><strong>Tel:</strong> {{ guardian?.phone_number }}</p>
+                  <p><strong>Ocupación:</strong> {{ guardian?.occupation || 'N/A' }}</p>
+                  <p><strong>Residencia:</strong> {{ guardian?.residence || 'N/A' }}</p>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #noGuardians>
+            <p class="no-data-message">No hay tutores registrados.</p>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
+</div>

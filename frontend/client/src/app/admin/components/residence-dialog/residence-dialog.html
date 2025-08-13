@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Añadir Nueva Residencia</h1>
+<div mat-dialog-content [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <mat-label>Nombre de la Residencia</mat-label>
+    <input matInput formControlName="name" placeholder="Ej: R 07">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="form.invalid">Guardar</button>
+</div>
+
+

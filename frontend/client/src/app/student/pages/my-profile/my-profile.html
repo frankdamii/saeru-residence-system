@@ -1,0 +1,154 @@
+<mat-toolbar color="primary">
+<b><span>Mi Portal de Residente</span> </b>
+  <span class="spacer"></span>
+    <button mat-flat-button (click)="downloadPdf()" class="download-button">
+      <mat-icon>download</mat-icon>
+      Descargar mi Ficha
+  </button>
+  <button mat-icon-button (click)="logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="container">
+  <ng-container *ngIf="(profile$ | async) as profile; else loading">
+    <div class="profile-header">
+      <img [src]="getFileUrl(profile?.profile_image_url)" alt="Foto de perfil" class="profile-avatar">
+      <div class="header-info">
+        <h2>{{ profile?.first_name }} {{ profile?.last_name }}</h2>
+        <p>{{ profile?.Major?.name || 'Carrera no especificada' }}</p>
+        <p class="residence-info">
+          <mat-icon>timer</mat-icon>
+          <span>Lleva <strong>{{ calculateYearsInResidence(profile?.Application?.submission_date) }}</strong> en la residencia</span>
+        </p>
+      </div>
+    </div>
+
+    <mat-tab-group animationDuration="0ms">
+      <mat-tab label="Mi Perfil">
+        <div class="tab-content">
+          <div class="details-grid">
+            <mat-card class="info-card">
+              <mat-card-header>
+                <mat-card-title>Datos Personales</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <mat-list>
+                  <mat-list-item><mat-icon matListItemIcon>cake</mat-icon> {{ profile?.date_of_birth | date:'dd/MM/yyyy' }}</mat-list-item>
+                  <mat-list-item><mat-icon matListItemIcon>badge</mat-icon> {{ profile?.identity_document_type }} {{ profile?.identity_document_number }}</mat-list-item>
+                  <mat-list-item><mat-icon matListItemIcon>phone</mat-icon> {{ profile?.phone_number }}</mat-list-item>
+                  <mat-list-item><mat-icon matListItemIcon>home</mat-icon> {{ profile?.home_residence }}</mat-list-item>
+                  <mat-list-item *ngIf="profile?.instagram_handle"><mat-icon matListItemIcon>camera_alt</mat-icon> {{ profile?.instagram_handle }}</mat-list-item>
+                </mat-list>
+              </mat-card-content>
+            </mat-card>
+            
+            <mat-card class="info-card">
+              <mat-card-header>
+                <mat-card-title>Información de Residencia</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <mat-list>
+                  <ng-container *ngIf="profile?.Application?.Habitation as habitation; else noRoom">
+                    <mat-list-item><mat-icon matListItemIcon>location_city</mat-icon> {{ habitation?.Residence?.name }}</mat-list-item>
+                    <mat-list-item><mat-icon matListItemIcon>bed</mat-icon> Habitación {{ habitation?.habitation_code }} <span *ngIf="habitation?.floor !== null">(Piso {{ habitation?.floor }})</span></mat-list-item>
+                  </ng-container>
+                  <ng-template #noRoom>
+                    <mat-list-item><mat-icon matListItemIcon>bed</mat-icon> Habitación no asignada</mat-list-item>
+                  </ng-template>
+
+                  <mat-list-item><mat-icon matListItemIcon>school</mat-icon> {{ profile?.Faculty?.name || 'No especificada' }}</mat-list-item>
+                  <mat-list-item><mat-icon matListItemIcon>class</mat-icon> {{ profile?.AcademicLevel?.level_name || 'No especificado' }}</mat-list-item>
+                </mat-list>
+              </mat-card-content>
+            </mat-card>
+            
+            <mat-card class="info-card full-width-card">
+              <mat-card-header>
+                <mat-card-title>Tutores e Información Adicional</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <h3 class="sub-header">Tutores</h3>
+                <ng-container *ngIf="profile?.guardians?.length > 0; else noGuardians">
+                  <div class="guardian-list">
+                    <div *ngFor="let guardian of profile.guardians" class="guardian-item">
+                      <mat-icon>supervisor_account</mat-icon>
+                      <div class="guardian-details">
+                        <p class="guardian-name">{{ guardian?.full_name }} ({{ guardian?.guardian_type }})</p>
+                        <p><strong>Tel:</strong> {{ guardian?.phone_number }}</p>
+                        <p><strong>Ocupación:</strong> {{ guardian?.occupation || 'N/A' }}</p>
+                        <p><strong>Residencia:</strong> {{ guardian?.residence || 'N/A' }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-template #noGuardians>
+                  <p class="no-data-message">No hay tutores registrados.</p>
+                </ng-template>
+                
+                <mat-divider></mat-divider>
+                <h3 class="sub-header">Información Adicional</h3>
+                <p><strong>Médica:</strong> {{ profile?.medical_issues || 'Ninguna' }}</p>
+                <p><strong>Hábitos:</strong> {{ profile?.harmful_habits || 'Ninguno' }}</p>
+                <p><strong>Observaciones:</strong> {{ profile?.observations || 'Ninguna' }}</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Tablón de Anuncios">
+        <div class="tab-content">
+          <ng-container *ngIf="(announcements$ | async) as announcements; else loadingAnnouncements">
+            <div *ngIf="announcements.length > 0; else noAnnouncements" class="announcements-list">
+              <mat-card *ngFor="let announcement of announcements" class="announcement-card">
+                <mat-card-header>
+                  <mat-icon mat-card-avatar>campaign</mat-icon>
+                  <mat-card-title>{{ announcement.title }}</mat-card-title>
+                  <mat-card-subtitle>Publicado el {{ announcement.created_at | date:'dd/MM/yyyy HH:mm' }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p>{{ announcement.content }}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <ng-template #noAnnouncements>
+              <div class="placeholder">
+                <mat-icon>notifications_off</mat-icon>
+                <h3>No hay anuncios nuevos</h3>
+                <p>Vuelve a consultar más tarde.</p>
+              </div>
+            </ng-template>
+          </ng-container>
+          <ng-template #loadingAnnouncements>
+            <div class="spinner-container"><mat-spinner></mat-spinner></div>
+          </ng-template>
+        </div>
+      </mat-tab>
+      
+      <mat-tab label="Solicitudes y Reclamaciones">
+        <div class="tab-content placeholder">
+          <mat-icon>edit_document</mat-icon>
+          <h3>Mis Solicitudes</h3>
+          <p>Aquí podrás solicitar cambios de habitación o reportar incidencias.</p>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Historial">
+        <div class="tab-content placeholder">
+          <mat-icon>history</mat-icon>
+          <h3>Historial de Estancia</h3>
+          <p>Esta sección mostrará un registro de tus habitaciones anteriores, pagos, etc.</p>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
+</div>

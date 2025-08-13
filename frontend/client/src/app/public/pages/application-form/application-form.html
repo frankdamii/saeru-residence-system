@@ -1,0 +1,204 @@
+<div class="form-wrapper">
+  <div class="form-container">
+    <div class="form-sidebar">
+      <div class="sidebar-header">
+        <img src="assets/images/AAUCA_LOGO-TR@2x_EP.png" alt="AAUCA Logo" class="logo">
+        <h3>Formulario de Admisión</h3>
+        <br>
+        <p>SISTEMA DE ADMISIÓN DE ESTUDIANTES EN LA RESIDENCIA UNIVERSITARIA</p>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="step-info">
+        <h4>Paso {{ stepper.selectedIndex + 1 }} de 4</h4>
+        <div [ngSwitch]="stepper.selectedIndex">
+          <p *ngSwitchCase="0">Introduce tus datos personales. Asegúrate de que coincidan con tu documento de identidad.</p>
+          <p *ngSwitchCase="1">Ahora, tu información académica. Elige la facultad y la carrera que cursas.</p>
+          <p *ngSwitchCase="2">Necesitamos algunos documentos. Puedes subirlos en formato de imagen o PDF.</p>
+          <p *ngSwitchCase="3">Por último, la información de tu tutor y otros datos de interés. ¡Ya casi está!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-content">
+      <mat-stepper [linear]="isLinear" #stepper>
+        <!-- Paso 1: Información Personal -->
+        <mat-step [stepControl]="personalInfoForm">
+          <form [formGroup]="personalInfoForm">
+            <ng-template matStepLabel>Información Personal</ng-template>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline"><mat-label>Nombres</mat-label><input matInput formControlName="firstName" required></mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>Apellidos</mat-label><input matInput formControlName="lastName" required></mat-form-field>
+            </div>
+
+            <div class="form-row date-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Fecha de Nacimiento</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="form-row id-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Tipo de Documento</mat-label>
+                    <mat-select formControlName="idType" required>
+                        <mat-option value="D.I.P.">D.I.P.</mat-option>
+                        <mat-option value="Pasaporte">Pasaporte</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Número de Documento</mat-label><input matInput formControlName="idNumber" required></mat-form-field>
+            </div>
+
+            <div class="form-row phone-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Prefijo</mat-label>
+                    <mat-select formControlName="phoneCode" required>
+                        <mat-option *ngFor="let country of countryCodes" [value]="country.code">
+                            {{ country.name }} ({{ country.code }})
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Teléfono</mat-label>
+                    <input matInput formControlName="phoneNumber" required [placeholder]="getPhoneExample()">
+                </mat-form-field>
+            </div>
+            
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Residencia Habitual</mat-label>
+                <input matInput formControlName="homeResidence" required placeholder="Ej: Malabo, Paraíso">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width"><mat-label>Instagram (Opcional)</mat-label><input matInput formControlName="instagram"></mat-form-field>
+
+            <div class="stepper-buttons">
+              <button mat-flat-button color="primary" matStepperNext>Siguiente</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Paso 2: Información Académica -->
+        <mat-step [stepControl]="academicInfoForm">
+          <form [formGroup]="academicInfoForm">
+            <ng-template matStepLabel>Información Académica</ng-template>
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Facultad</mat-label>
+                <mat-select formControlName="facultyId" (selectionChange)="onFacultyChange($event.value)" required>
+                    <mat-option *ngFor="let faculty of faculties" [value]="faculty.id">{{ faculty.name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Carrera</mat-label>
+                <mat-select formControlName="majorId" required>
+                    <mat-option *ngFor="let major of filteredMajors" [value]="major.id">{{ major.name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Curso</mat-label>
+                <mat-select formControlName="academicLevelId" required>
+                    <mat-option *ngFor="let level of academicLevels" [value]="level.id">{{ level.name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div class="stepper-buttons">
+              <button mat-button matStepperPrevious>Atrás</button>
+              <button mat-flat-button color="primary" matStepperNext>Siguiente</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Paso 3: Documentos -->
+        <mat-step [stepControl]="documentsForm">
+            <ng-template matStepLabel>Adjuntar Documentos</ng-template>
+            <div class="upload-section">
+                <div class="file-upload">
+                    <label>Foto de Perfil (Obligatoria)</label>
+                    <div class="upload-area" (click)="profileImageInput.click()">
+                        <div *ngIf="!profileImagePreview" class="upload-placeholder">
+                            <mat-icon>add_a_photo</mat-icon>
+                            <span>Subir Foto</span>
+                        </div>
+                        <img *ngIf="profileImagePreview" [src]="profileImagePreview" alt="Previsualización" class="preview">
+                    </div>
+                    <input hidden (change)="onFileSelected($event, 'profileImage')" #profileImageInput type="file" accept="image/*">
+                    <span *ngIf="documentsForm.get('profileImage')?.value" class="file-name">{{ documentsForm.get('profileImage')?.value.name }}</span>
+                </div>
+                <div class="file-upload">
+                    <label>Comprobante de Matrícula</label>
+                    <button type="button" mat-stroked-button (click)="enrollmentProofInput.click()"><mat-icon>cloud_upload</mat-icon> Seleccionar Archivo</button>
+                    <input hidden (change)="onFileSelected($event, 'enrollmentProof')" #enrollmentProofInput type="file" accept="image/*,application/pdf">
+                    <span *ngIf="documentsForm.get('enrollmentProof')?.value" class="file-name">{{ documentsForm.get('enrollmentProof')?.value.name }}</span>
+                </div>
+                <div class="file-upload">
+                    <label>Volante de Entrada</label>
+                    <button type="button" mat-stroked-button (click)="entrySlipInput.click()"><mat-icon>cloud_upload</mat-icon> Seleccionar Archivo</button>
+                    <input hidden (change)="onFileSelected($event, 'entrySlip')" #entrySlipInput type="file" accept="image/*,application/pdf">
+                    <span *ngIf="documentsForm.get('entrySlip')?.value" class="file-name">{{ documentsForm.get('entrySlip')?.value.name }}</span>
+                </div>
+                <div class="file-upload">
+                    <label>Justificante de Pago</label>
+                    <button type="button" mat-stroked-button (click)="paymentReceiptInput.click()"><mat-icon>cloud_upload</mat-icon> Seleccionar Archivo</button>
+                    <input hidden (change)="onFileSelected($event, 'paymentReceipt')" #paymentReceiptInput type="file" accept="image/*,application/pdf">
+                    <span *ngIf="documentsForm.get('paymentReceipt')?.value" class="file-name">{{ documentsForm.get('paymentReceipt')?.value.name }}</span>
+                </div>
+            </div>
+            <div class="stepper-buttons">
+              <button mat-button matStepperPrevious>Atrás</button>
+              <button mat-flat-button color="primary" matStepperNext>Siguiente</button>
+            </div>
+        </mat-step>
+
+        <!-- Paso 4: Información de Tutor -->
+        <mat-step [stepControl]="guardianInfoForm">
+            <ng-template matStepLabel>Información Adicional</ng-template>
+            <form [formGroup]="guardianInfoForm">
+                <h3>Tutor Principal</h3>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Tipo de Tutor</mat-label>
+                    <mat-select formControlName="guardian1Type" required>
+                        <mat-option value="Padre">Padre</mat-option>
+                        <mat-option value="Madre">Madre</mat-option>
+                        <mat-option value="Tutor">Tutor</mat-option>
+                        <mat-option value="Tutor Eventual">Tutor Eventual</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div class="form-row">
+                    <mat-form-field appearance="outline"><mat-label>Nombre Completo del Tutor</mat-label><input matInput formControlName="guardian1Name" required></mat-form-field>
+                    <mat-form-field appearance="outline"><mat-label>Teléfono del Tutor</mat-label><input matInput formControlName="guardian1Phone" required></mat-form-field>
+                </div>
+                <div class="form-row">
+                    <mat-form-field appearance="outline"><mat-label>Ocupación del Tutor</mat-label><input matInput formControlName="guardian1Occupation"></mat-form-field>
+                    <mat-form-field appearance="outline"><mat-label>Residencia del Tutor</mat-label><input matInput formControlName="guardian1Residence"></mat-form-field>
+                </div>
+                 <mat-form-field appearance="outline" class="full-width"><mat-label>Parentesco (si es Tutor)</mat-label><input matInput formControlName="guardian1Relationship"></mat-form-field>
+                
+                <h3 class="extra-info-header">Información Adicional (Opcional)</h3>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Problemas médicos frecuentes</mat-label>
+                    <textarea matInput formControlName="medical"></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Hábitos perjudiciales</mat-label>
+                    <textarea matInput formControlName="habits"></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Observaciones</mat-label>
+                    <textarea matInput formControlName="observations"></textarea>
+                </mat-form-field>
+
+                <div class="stepper-buttons">
+                    <button mat-button matStepperPrevious>Atrás</button>
+                    <button mat-raised-button color="primary" (click)="onSubmit()">Enviar Solicitud</button>
+                </div>
+            </form>
+        </mat-step>
+      </mat-stepper>
+
+      <div *ngIf="isLoading" class="loading-overlay">
+        <mat-spinner></mat-spinner>
+        <h3>Enviando solicitud...</h3>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,132 @@
+<div class="container">
+  <ng-container *ngIf="(application$ | async) as app; else loading">
+    <a mat-stroked-button routerLink="/admin/applications" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+      Volver a la lista
+    </a>
+
+    <h1>Detalles de la Solicitud #{{ app.id }}</h1>
+
+    <div class="status-bar">
+      <span>Estado actual:</span>
+      <mat-chip-listbox>
+        <mat-chip color="primary" selected>{{ app.status | uppercase }}</mat-chip>
+      </mat-chip-listbox>
+    </div>
+
+    <mat-grid-list [cols]="(cols$ | async) || 3" rowHeight="fit" gutterSize="20px">
+      <!-- Columna 1: Datos Personales -->
+
+        <mat-card class="detail-card">
+          <mat-card-header>
+            <img mat-card-avatar [src]="getFileUrl(app.StudentProfile?.profile_image_url)" alt="Foto de perfil">
+            <mat-card-title>{{ app.StudentProfile?.first_name }} {{ app.StudentProfile?.last_name }}</mat-card-title>
+            <mat-card-subtitle>{{ app.StudentProfile?.Major?.name || 'Carrera no especificada' }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-list role="list">
+              <mat-list-item role="listitem"><mat-icon matListItemIcon>cake</mat-icon> {{ app.StudentProfile?.date_of_birth | date:'dd/MM/yyyy' }}</mat-list-item>
+              <mat-list-item role="listitem"><mat-icon matListItemIcon>badge</mat-icon> {{ app.StudentProfile?.identity_document_type }} {{ app.StudentProfile?.identity_document_number }}</mat-list-item>
+              <mat-list-item role="listitem"><mat-icon matListItemIcon>phone</mat-icon> {{ app.StudentProfile?.phone_number }}</mat-list-item>
+              <mat-list-item role="listitem"><mat-icon matListItemIcon>home</mat-icon> {{ app.StudentProfile?.home_residence }}</mat-list-item>
+              <mat-list-item role="listitem"><mat-icon matListItemIcon>school</mat-icon> {{ app.StudentProfile?.Faculty?.name || 'No especificada' }}</mat-list-item>
+              <mat-list-item role="listitem"><mat-icon matListItemIcon>history_edu</mat-icon> {{ app.StudentProfile?.AcademicLevel?.level_name || 'No especificado' }}</mat-list-item>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+ 
+<br>
+      <!-- Columna 2: Documentos y Tutores -->
+
+        <mat-card class="detail-card">
+          <mat-card-header>
+            <mat-card-title>Documentos y Tutores</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h3 class="sub-header">Documentos Adjuntos</h3>
+            <mat-list>
+              <mat-list-item>
+                <mat-icon matListItemIcon>description</mat-icon>
+                <a [href]="getFileUrl(app.EntryDocument?.enrollment_proof_url)" target="_blank">Comprobante de Matrícula</a>
+              </mat-list-item>
+              <mat-list-item>
+                <mat-icon matListItemIcon>description</mat-icon>
+                <a [href]="getFileUrl(app.EntryDocument?.entry_slip_url)" target="_blank">Volante de Entrada</a>
+              </mat-list-item>
+              <mat-list-item>
+                <mat-icon matListItemIcon>description</mat-icon>
+                <a [href]="getFileUrl(app.EntryDocument?.payment_receipt_url)" target="_blank">Justificante de Pago</a>
+              </mat-list-item>
+            </mat-list>
+            <mat-divider></mat-divider>
+            <h3 class="sub-header">Tutores</h3>
+            <ng-container *ngIf="app.StudentProfile?.guardians?.length > 0; else noGuardians">
+              <div class="guardian-list">
+                <div *ngFor="let guardian of app.StudentProfile.guardians" class="guardian-item">
+                  <mat-icon>supervisor_account</mat-icon>
+                  <div class="guardian-details">
+                    <p class="guardian-name">{{ guardian?.full_name }} ({{ guardian?.guardian_type }})</p>
+                    <p><strong>Tel:</strong> {{ guardian?.phone_number }}</p>
+                    <p><strong>Ocupación:</strong> {{ guardian?.occupation || 'N/A' }}</p>
+                    <p><strong>Residencia:</strong> {{ guardian?.residence || 'N/A' }}</p>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #noGuardians>
+              <p class="no-data-message">No hay tutores registrados.</p>
+            </ng-template>
+          </mat-card-content>
+        </mat-card>
+
+<br>
+      <!-- Columna 3: Acciones e Info Adicional -->
+ 
+         <mat-card class="detail-card">
+          <mat-card-header>
+            <mat-card-title>Acciones e Información Adicional</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="actions-content">
+            <div>
+              <h3 class="sub-header">Información Adicional</h3>
+              <p><strong>Médica:</strong> {{ app.StudentProfile?.medical_issues || 'Ninguna' }}</p>
+              <p><strong>Hábitos:</strong> {{ app.StudentProfile?.harmful_habits || 'Ninguno' }}</p>
+              <p><strong>Observaciones:</strong> {{ app.StudentProfile?.observations || 'Ninguna' }}</p>
+            </div>
+            
+            <mat-divider></mat-divider>
+
+            <div>
+              <h3 class="sub-header">Decisión</h3>
+              <mat-form-field appearance="outline" *ngIf="app.status === 'pending'">
+                <mat-label>Asignar Habitación (Requerido para aprobar)</mat-label>
+                <mat-select [(ngModel)]="selectedHabitationId">
+                  <mat-option *ngFor="let room of (availableHabitations$ | async)" [value]="room.id">
+                    {{ room.Residence?.name }} - {{ room.habitation_code }} (Cap: {{room.capacity}})
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Añadir notas internas...</mat-label>
+                <textarea matInput [(ngModel)]="adminNotes"></textarea>
+              </mat-form-field>
+
+              <div class="action-buttons" *ngIf="app.status === 'pending'">
+                <button mat-flat-button color="primary" (click)="updateStatus('approved')"><mat-icon>check_circle</mat-icon> Aprobar</button>
+                <button mat-flat-button color="warn" (click)="updateStatus('rejected')"><mat-icon>cancel</mat-icon> Rechazar</button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+    </mat-grid-list>
+
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
+</div>

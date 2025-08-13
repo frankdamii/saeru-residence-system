@@ -1,0 +1,97 @@
+.container {
+  padding: 20px;
+}
+
+.back-button {
+  margin-bottom: 20px;
+}
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.detail-card {
+  width: 95%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-card-header {
+    flex-shrink: 0;
+}
+
+.mat-card-content {
+    flex-grow: 1;
+    overflow: auto;
+}
+
+.sub-header {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.actions-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.action-buttons button {
+    width: 100%;
+    padding: 10px 0;
+}
+
+textarea {
+    width: 100%;
+    min-height: 100px;
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+/* Estilos para la lista de tutores personalizada */
+.guardian-list {
+  padding: 0 16px;
+}
+.guardian-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+.guardian-details p {
+  margin: 0;
+  line-height: 1.4;
+  color: #555;
+}
+.guardian-name {
+  font-weight: 500;
+  color: #000;
+}
+.no-data-message {
+  padding: 0 16px;
+  color: #888;
+  font-style: italic;
+}

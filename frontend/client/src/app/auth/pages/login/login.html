@@ -1,0 +1,49 @@
+<div class="login-page">
+  <div class="background-image"></div>
+  <div class="overlay"></div>
+
+  <a routerLink="/" class="back-to-home-button">
+    <mat-icon>arrow_back</mat-icon>
+    <span>Volver al Inicio</span>
+  </a>
+
+  <div class="login-container">
+    <mat-card>
+      <div class="login-header">
+        <img src="assets/images/AAUCA_LOGO-TR@2x_EP.png" alt="AAUCA Logo" class="logo">
+        <mat-card-title>Bienvenido a SAERU</mat-card-title>
+        <mat-card-subtitle>Accede a tu panel de control</mat-card-subtitle>
+      </div>
+      <mat-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline">
+            <mat-label>Correo Electrónico</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="tu@email.com">
+            <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+              El correo es requerido.
+            </mat-error>
+            <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+              Formato de correo inválido.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input matInput formControlName="password" type="password">
+             <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+              La contraseña es requerida.
+            </mat-error>
+          </mat-form-field>
+
+          <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </div>
+
+          <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid" class="login-button">
+            Iniciar Sesión
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

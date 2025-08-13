@@ -1,0 +1,61 @@
+<div class="container">
+  <div class="header">
+    <h1>Gestión de Residencias y Habitaciones</h1>
+    <button mat-flat-button color="primary" (click)="openAddResidenceDialog()">
+      <mat-icon>add_circle</mat-icon>
+      Añadir Residencia
+    </button>
+  </div>
+
+  <ng-container *ngIf="(residences$ | async) as residences; else loading">
+    <mat-accordion multi>
+      <mat-expansion-panel *ngFor="let residence of residences">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <strong>{{ residence.name }}</strong>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ residence.Habitations.length }} habitaciones
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <button mat-stroked-button color="primary" class="add-room-button" (click)="openAddHabitationDialog(residence.id)">
+          <mat-icon>add</mat-icon>
+          Añadir Habitación
+        </button>
+
+        <mat-list>
+          <mat-list-item *ngFor="let room of residence.Habitations">
+            <mat-icon matListItemIcon>bed</mat-icon>
+            <div matListItemTitle>{{ room.habitation_code }} (Piso {{ room.floor }})</div>
+            <div matListItemLine>Capacidad: {{ room.capacity }}</div>
+            
+            <div matListItemMeta>
+              <mat-chip-listbox>
+                <mat-chip [color]="room.status === 'available' ? 'primary' : (room.status === 'occupied' ? 'accent' : 'warn')" selected>
+                  {{ room.status | uppercase }}
+                </mat-chip>
+              </mat-chip-listbox>
+            </div>
+            <div matListItemMeta class="occupant-info" *ngIf="room.status === 'occupied'">
+              <mat-icon>person</mat-icon>
+              <span>{{ getOccupantName(room) }}</span>
+            </div>
+            <div matListItemMeta>
+                <button mat-icon-button color="warn" (click)="deleteHabitation(room.id)">
+                    <mat-icon>delete_forever</mat-icon>
+                </button>
+            </div>
+          </mat-list-item>
+        </mat-list>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
+</div>
