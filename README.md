@@ -5,7 +5,7 @@
 
 ![AAUCA Logo](frontend/client/src/assets/images/AAUCA_LOGO-TR@2x_EP.png)
 
-**SAERU** es una aplicación web integral diseñada para gestionar, digitalizar y centralizar el proceso de admisión y la vida residencial de estudiantes en las residencias de la **Universidad Afro-Americana de África Central (AAUCA)**.
+**SAERU** es un sistema diseñado para gestionar, digitalizar y centralizar el proceso de admisión y la vida residencial de estudiantes en las residencias de la **Universidad Afro-Americana de África Central (AAUCA)**.
 Cubre todo el flujo: desde la solicitud pública del aspirante hasta la admisión, asignación de habitación, gestión de residentes y comunicación interna mediante tablón de anuncios.
 
 ---
