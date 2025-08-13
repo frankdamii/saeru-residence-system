@@ -1,0 +1,18 @@
+# Archivos de entorno (¡NUNCA SUBIR!)
+/backend/.env
+
+# Dependencias
+/backend/node_modules
+/frontend/client/node_modules
+
+# Archivos de caché y compilación de Angular
+/frontend/client/.angular
+/frontend/client/dist
+/frontend/client/coverage
+
+# Archivos de subida de usuarios
+/backend/public/uploads/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
