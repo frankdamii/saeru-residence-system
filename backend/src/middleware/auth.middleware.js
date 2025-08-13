@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 module.exports = {
   verifyToken: (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Formato "Bearer TOKEN"
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
       return res.status(403).json({ message: 'No se proporcionó un token.' });

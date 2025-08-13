@@ -34,7 +34,7 @@ exports.getMyProfile = async (req, res) => {
         res.status(200).json(studentProfile);
 
     } catch (error) {
-        console.error("Error en getMyProfile:", error); // Añadimos un log para ver errores en el servidor
+        console.error("Error en getMyProfile:", error);
         res.status(500).json({ message: 'Error al obtener el perfil.', error: error.message });
     }
 };

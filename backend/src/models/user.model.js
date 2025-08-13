@@ -25,10 +25,10 @@ const User = sequelize.define('User', {
     defaultValue: true,
   },
 }, {
-  tableName: 'users', // Le decimos a Sequelize el nombre exacto de la tabla
-  timestamps: true, // Usa `created_at` y `updated_at`
+  tableName: 'users',
+  timestamps: true,
   createdAt: 'created_at',
-  updatedAt: false, // No tenemos `updated_at` en nuestra tabla
+  updatedAt: false,
 });
 
 module.exports = User;

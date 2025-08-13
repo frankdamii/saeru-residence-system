@@ -9,7 +9,7 @@ const db = require('./src/models');
 const authRoutes = require('./src/routes/auth.routes');
 const adminRoutes = require('./src/routes/admin.routes');
 const applicationRoutes = require('./src/routes/application.routes');
-const studentRoutes = require('./src/routes/student.routes'); // <-- NUEVO
+const studentRoutes = require('./src/routes/student.routes');
 
 const app = express();
 
@@ -23,7 +23,7 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/applications', applicationRoutes);
-app.use('/api/student', studentRoutes); // <-- NUEVO
+app.use('/api/student', studentRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: '¡Bienvenido a la API de SAERU! 🚀' });
@@ -37,10 +37,10 @@ async function startServer() {
     console.log('✅ Modelos sincronizados con la base de datos.');
     
     app.listen(PORT, () => {
-      console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
+      console.log(`Servidor corriendo en el puerto ${PORT}`);
     });
   } catch (error) {
-    console.error('❌ Error al iniciar el servidor:', error);
+    console.error('Error al iniciar el servidor:', error);
   }
 }
 
